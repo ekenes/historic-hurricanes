@@ -1,0 +1,14 @@
+#header {
+  padding: 5px;
+}
+
+#legend-content {
+  padding: 10px;
+  display: inline-block;
+  height: auto;
+}
+#legend-img {
+  width: 400px;
+  height: auto;
+  margin: 0 auto;
+}
