@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>Historic Hurricanes</title>
+  <title>Historic Hurricanes (1851-2015)</title>
 
   <!-- Load Calcite components from CDN -->
   <script type="module" src="https://js.arcgis.com/calcite-components/3.2.1/calcite.esm.js"></script>
@@ -24,7 +24,9 @@
       <div id="heading">
         Animated Hurricane Tracks
       </div>
-      <div id="subheading">Explore hurricanes from 2005 to 2006 using the time slider below.</div>
+      <div id="subheading">Explore hurricanes from <calcite-select id="year-select"></calcite-select> using the time
+        slider below.
+      </div>
     </div>
     <arcgis-map>
       <arcgis-zoom position="top-left"></arcgis-zoom>
@@ -53,9 +55,20 @@
 
     const yearSlider = document.querySelector("arcgis-time-slider");
     const viewElement = document.querySelector("arcgis-map");
+    const yearSelect = document.getElementById("year-select");
+
+    await yearSelect.componentOnReady();
+
+    for (let year = 1851; year <= 2015; year++) {
+      const option = document.createElement("calcite-option");
+      option.value = year;
+      option.label = `${year} - ${year + 1}`;
+      option.selected = year === 2005;
+      yearSelect.appendChild(option);
+    }
 
     const startYear = 2005;
-    const endYear = 2006;
+    const endYear = startYear + 1;
 
     // Esri color ramps - Plasma
     const plasma = ["#8d01efff", "#bf09eeff", "#ff51bdff", "#ff9d82ff", "#ffc666ff", "#ffff35ff"];
@@ -969,6 +982,23 @@
       },
     };
     viewElement.timeExtent = yearSlider.timeExtent;
+
+    yearSelect.addEventListener("calciteSelectChange", (event) => {
+      const selectedYear = parseInt(yearSelect.value);
+      const newStart = new Date(selectedYear, 0, 1);
+      const newEnd = new Date(selectedYear + 1, 11, 31);
+
+      yearSlider.fullTimeExtent = {
+        start: newStart,
+        end: newEnd,
+      };
+      yearSlider.timeExtent = {
+        start: newStart,
+        end: newStart,
+      };
+      viewElement.timeExtent = yearSlider.timeExtent;
+      layer.definitionExpression = `Year >= ${selectedYear} AND Year <= ${selectedYear + 1}`;
+    });
   </script>
 </body>
 

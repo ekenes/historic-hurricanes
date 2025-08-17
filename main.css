@@ -8,6 +8,10 @@
 #subheading {
   font-size: 16px;
   color: #adabab;
+  display: flex;
+  align-items: center;
+  gap: 0.5em; /* optional: adds space between text and select */
+  flex-wrap: wrap; /* optional: allows wrapping on small screens */
 }
 
 #legend-content {
@@ -19,4 +23,7 @@
   width: 400px;
   height: auto;
   margin: 0 auto;
+}
+calcite-select {
+  max-width: 200px;
 }
